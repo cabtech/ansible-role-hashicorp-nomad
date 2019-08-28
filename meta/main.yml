@@ -1,4 +1,4 @@
 ---
 dependencies:
-- {role: hashicorp/common, tags: nomad}
+- {role: ansible-role-hashicorp-common, tags: nomad}
 ...
