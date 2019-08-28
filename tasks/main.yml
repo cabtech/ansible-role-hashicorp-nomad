@@ -17,7 +17,7 @@
   get_url:
     url: '{{hashicorp_repo}}/nomad/{{nomad_version}}/nomad_{{nomad_version}}_{{hashicorp_arch}}.{{nomad_format}}'
     dest: '{{hashicorp_dir_staging}}'
-    timeout: '{{ct_internet_timeout}}'
+    timeout: '{{hashicorp_internet_timeout}}'
     validate_certs: false
   tags:
   - nomad
