@@ -1,5 +1,7 @@
 ---
 nomad_format: 'zip'
 nomad_state: present
-nomad_version: '0.9.4'
+nomad_version: '0.9.6'
+#
+nomad_target: 'nomad_{{nomad_version}}_{{hashicorp_arch}}.{{nomad_format}}'
 ...

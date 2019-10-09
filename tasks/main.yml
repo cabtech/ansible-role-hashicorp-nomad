@@ -1,37 +1,33 @@
 ---
 
-- name: 'push nomad bash include'
+- name: 'push bash include'
   template:
     src: nomad.sh.j2
     dest: /usr/local/etc/bash.d/nomad.sh
     owner: root
     group: root
     mode: 0644
-  when: false  # TODO
   become: true
   tags:
-  - nomad
-  - nomad-bash
+  - ct-nomad
 
-- name: 'download nomad archive'
+- name: 'download archive'
   get_url:
-    url: '{{hashicorp_repo}}/nomad/{{nomad_version}}/nomad_{{nomad_version}}_{{hashicorp_arch}}.{{nomad_format}}'
+    url: '{{hashicorp_repo}}/nomad/{{nomad_version}}/{{nomad_target}}'
     dest: '{{hashicorp_dir_staging}}'
     timeout: '{{hashicorp_internet_timeout}}'
     validate_certs: false
   tags:
-  - nomad
-  - nomad-pkg
+  - ct-nomad
 
-- name: 'expand zip files'
+- name: 'expand archive'
   unarchive:
-    src: '{{hashicorp_dir_staging}}/nomad_{{nomad_version}}_{{hashicorp_arch}}.{{nomad_format}}'
+    src: '{{hashicorp_dir_staging}}/{{nomad_target}}'
     dest: '{{hashicorp_dir_bin}}'
     copy: false
   become: true
   tags:
-  - nomad
-  - nomad-pkg
+  - ct-nomad
 
 # --------------------------------
 ...
