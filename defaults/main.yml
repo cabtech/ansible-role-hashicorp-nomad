@@ -1,5 +1,5 @@
 ---
-nomad_format: 'zip'
+nomad_format: zip
 nomad_state: present
 nomad_version: '0.9.6'
 #
