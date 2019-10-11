@@ -3,7 +3,7 @@ nomad_etc_dir: /etc/nomad
 nomad_format: zip
 nomad_lib_dir: /var/lib/nomad
 nomad_role: client  # ... or server
-nomad_state: present
+nomad_state: started
 nomad_var_dir: /var/nomad
 nomad_version: '0.9.6'
 
