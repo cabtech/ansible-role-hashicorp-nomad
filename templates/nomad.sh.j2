@@ -1,1 +1,5 @@
-# empty for now
+# --------------------------------
+# bash include nomad.sh MANAGED_BY_ANSIBLE
+export PATH="{{hashicorp_dir_bin}}:${PATH}"
+alias nmd={{hashicorp_dir_bin}}/nomad
+# --------------------------------
