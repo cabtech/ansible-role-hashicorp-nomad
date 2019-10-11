@@ -1,12 +1,57 @@
 ---
 
-- name: 'push bash include'
+- name: 'system account'
+  user:
+    name: nomad
+    comment: 'Nomad system account'
+    system: true
+    state: present
+  become: true
+  tags:
+  - ct-nomad
+
+- name: 'bash include'
   template:
     src: nomad.sh.j2
     dest: /usr/local/etc/bash.d/nomad.sh
     owner: root
     group: root
     mode: 0644
+  become: true
+  tags:
+  - ct-nomad
+
+- name: 'directories'
+  file:
+    state: directory
+    path: '{{item}}'
+    owner: root
+    group: root
+    mode: '0755'
+  loop: '{{nomad_dirs}}'
+  become: true
+  tags:
+  - ct-nomad
+
+- name: 'config file'
+  template:
+    src: nomad-{{nomad_role}}.hcl.j2
+    dest: '{{nomad_etc_dir}}/nomad-{{nomad_role}}.hcl'
+    owner: root
+    group: root
+    mode: '0600'
+  become: true
+  tags:
+  - ct-nomad
+
+- name: 'systemd unit file'
+  template:
+    src: nomad-{{nomad_role}}.service.j2
+    dest: /etc/systemd/system/nomad-{{nomad_role}}.service
+    owner: root
+    group: root
+    mode: '0600'
+  register: reg_service
   become: true
   tags:
   - ct-nomad
@@ -25,6 +70,16 @@
     src: '{{hashicorp_dir_staging}}/{{nomad_target}}'
     dest: '{{hashicorp_dir_bin}}'
     copy: false
+  become: true
+  tags:
+  - ct-nomad
+
+- name: 'nomad-{{nomad_role}} service to {{nomad_state}}'
+  systemd:
+    name: nomad-{{nomad_role}}
+    state: '{{nomad_state}}'
+    enabled: true
+    daemon_reload: '{{reg_service is changed}}'
   become: true
   tags:
   - ct-nomad
