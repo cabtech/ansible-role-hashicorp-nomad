@@ -3,7 +3,7 @@ Description=Nomad startup process
 After=network.target
  
 [Service]
-ExecStart=/bin/bash -c '{{hashicorp_dir_bin}}/nomad agent -config={{nomad_etc_dir}}/nomad-server.hcl'
+ExecStart=/bin/bash -c '{{hashicorp_dir_bin}}/nomad agent -config={{nomad_etc_dir}}/server.hcl'
 Restart=always
 RestartSec=10
 TimeoutStartSec=0

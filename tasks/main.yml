@@ -36,7 +36,7 @@
 - name: 'config file'
   template:
     src: nomad-{{nomad_role}}.hcl.j2
-    dest: '{{nomad_etc_dir}}/nomad-{{nomad_role}}.hcl'
+    dest: '{{nomad_etc_dir}}/{{nomad_role}}.hcl'
     owner: root
     group: root
     mode: '0600'
