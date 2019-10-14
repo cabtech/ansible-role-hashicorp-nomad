@@ -2,4 +2,5 @@
 # bash include nomad.sh MANAGED_BY_ANSIBLE
 export PATH="{{hashicorp_dir_bin}}:${PATH}"
 alias nmd={{hashicorp_dir_bin}}/nomad
+export NOMAD_ADDR=http://{{local_ipv4}}:{{nomad_port}}
 # --------------------------------

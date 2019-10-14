@@ -3,7 +3,8 @@ nomad_etc_dir: /etc/nomad
 nomad_format: zip
 nomad_lib_dir: /var/lib/nomad
 nomad_log_level: DEBUG
-nomad_role: client  # ... or server
+nomad_port: 4646
+nomad_role: client  # ...or server
 nomad_state: started
 nomad_log_dir: /var/log/nomad
 nomad_version: '0.9.6'
