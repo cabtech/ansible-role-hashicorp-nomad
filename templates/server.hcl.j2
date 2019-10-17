@@ -3,6 +3,17 @@ datacenter = "{{consul_datacentre}}"
 log_level  = "{{nomad_log_level}}"
 
 server {
-  bootstrap_expect = 1
+  bootstrap_expect = 3
   enabled          = true
 }
+{% if nomad_vault_token is defined %}
+
+vault {
+  address          = "https://{{vault_address}}"
+  create_from_role = "{{nomad_vault_role}}"
+  enabled          = true
+  token            = "{{nomad_vault_token}}"
+}
+{% endif %}
+
+# MANAGED_BY_ANSIBLE

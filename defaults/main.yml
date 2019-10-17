@@ -14,5 +14,6 @@ nomad_target: 'nomad_{{nomad_version}}_{{hashicorp_arch}}.{{nomad_format}}'
 nomad_dirs:
 - '{{nomad_etc_dir}}'
 - '{{nomad_lib_dir}}'
+- '{{nomad_lib_dir}}/plugins'
 - '{{nomad_log_dir}}'
 ...

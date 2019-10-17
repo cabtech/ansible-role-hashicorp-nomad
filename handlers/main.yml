@@ -1,0 +1,7 @@
+---
+- name: 'handler_restart_nomad'
+  systemd:
+    state: restarted
+    name: nomad-{{nomad_role}}.service
+  become: true
+...

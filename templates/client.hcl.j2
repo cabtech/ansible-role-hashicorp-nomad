@@ -1,7 +1,21 @@
-data_dir = “{{nomad_lib_dir}}”
+data_dir   = "{{nomad_lib_dir}}"
+datacenter = "{{consul_datacentre}}"
 
 client {
   enabled          = true
-  node_class       = "node"
-  bootstrap_expect = 1
+  servers          = [
+  {% for ip in nomad_servers %}
+    "{{ip}}:4647"{{ "," if not loop.last else "" }}
+{% endfor %}
+  ]
 }
+
+{% if nomad_allow_raw_exec is defined %} 
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
+}
+{% endif %}
+
+# MANAGED_BY_ANSIBLE

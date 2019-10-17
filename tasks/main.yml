@@ -1,5 +1,23 @@
 ---
 
+- name: 'download archive'
+  get_url:
+    url: '{{hashicorp_repo}}/nomad/{{nomad_version}}/{{nomad_target}}'
+    dest: '{{hashicorp_dir_staging}}'
+    timeout: '{{hashicorp_internet_timeout}}'
+    validate_certs: false
+  tags:
+  - ct-nomad
+
+- name: 'expand archive'
+  unarchive:
+    src: '{{hashicorp_dir_staging}}/{{nomad_target}}'
+    dest: '{{hashicorp_dir_bin}}'
+    copy: false
+  become: true
+  tags:
+  - ct-nomad
+
 - name: 'system account'
   user:
     name: nomad
@@ -40,6 +58,8 @@
     owner: root
     group: root
     mode: '0600'
+  notify: handler_restart_nomad
+  no_log: true
   become: true
   tags:
   - ct-nomad
@@ -52,24 +72,6 @@
     group: root
     mode: '0600'
   register: reg_service
-  become: true
-  tags:
-  - ct-nomad
-
-- name: 'download archive'
-  get_url:
-    url: '{{hashicorp_repo}}/nomad/{{nomad_version}}/{{nomad_target}}'
-    dest: '{{hashicorp_dir_staging}}'
-    timeout: '{{hashicorp_internet_timeout}}'
-    validate_certs: false
-  tags:
-  - ct-nomad
-
-- name: 'expand archive'
-  unarchive:
-    src: '{{hashicorp_dir_staging}}/{{nomad_target}}'
-    dest: '{{hashicorp_dir_bin}}'
-    copy: false
   become: true
   tags:
   - ct-nomad
