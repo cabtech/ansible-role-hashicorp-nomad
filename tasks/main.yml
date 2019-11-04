@@ -1,6 +1,6 @@
 ---
 
-- name: 'download archive'
+- name: 'download Nomad archive'
   get_url:
     url: '{{hashicorp_repo}}/nomad/{{nomad_version}}/{{nomad_target}}'
     dest: '{{hashicorp_dir_staging}}'
@@ -13,6 +13,40 @@
   unarchive:
     src: '{{hashicorp_dir_staging}}/{{nomad_target}}'
     dest: '{{hashicorp_dir_bin}}'
+    copy: false
+  become: true
+  tags:
+  - ct-nomad
+
+- name: 'create CNI directories'
+  file:
+    state: directory
+    path: '{{item}}'
+    owner: root
+    group: root
+    mode: '0755'
+  loop: '{{nomad_cni_dirs}}'
+  become: true
+  tags:
+  - ct-nomad
+  - ct-nomad-cni
+
+- name: 'download CNI archive'
+  get_url:
+    url: '{{nomad_cni_url}}'
+    dest: '{{nomad_cni_base}}/pkg'
+    timeout: '{{hashicorp_internet_timeout}}'
+    validate_certs: false
+  ignore_errors: '{{ansible_check_mode}}'  # TODO would be good to check the message too
+  become: true
+  tags:
+  - ct-nomad
+  - ct-nomad-cni
+
+- name: 'expand CNI archive'
+  unarchive:
+    src: '{{nomad_cni_base}}/pkg/{{nomad_cni_archive}}'
+    dest: '{{nomad_cni_base}}/bin'
     copy: false
   become: true
   tags:

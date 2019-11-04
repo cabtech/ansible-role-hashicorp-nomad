@@ -16,4 +16,11 @@ nomad_dirs:
 - '{{nomad_lib_dir}}'
 - '{{nomad_lib_dir}}/plugins'
 - '{{nomad_log_dir}}'
+
+# Nomad uses CNI for its sidecar proxy to talk to Consul
+nomad_cni_archive: 'cni-plugins-linux-amd64-{{nomad_cni_version}}.tgz'
+nomad_cni_base: '/opt/cni'
+nomad_cni_dirs: ['{{nomad_cni_base}}', '{{nomad_cni_base}}/bin', '{{nomad_cni_base}}/pkg']
+nomad_cni_url: 'https://github.com/containernetworking/plugins/releases/download/{{nomad_cni_version}}/{{nomad_cni_archive}}'
+nomad_cni_version: 'v0.8.2'
 ...
