@@ -16,6 +16,12 @@ None
 | nomad_state | started | anything supported by systemctl |
 | nomad_log_dir | `/var/log/nomad` | |
 | nomad_version | '0.9.6' | |
+||||
+| nomad_cni_archive | computed | name of downloaded archive |
+| nomad_cni_base    | /opt/cni | where to install things |
+| nomad_cni_dirs    | computed | directories to create |
+| nomad_cni_url     | computed | URL to download |
+| nomad_cni_version | 'v0.8.2' | used to derive download URL |
 
 ## Optional variables
 | Name | Purpose |
