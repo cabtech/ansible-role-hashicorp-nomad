@@ -2,17 +2,43 @@
 
 - name: 'download archive'
   get_url:
-    url: '{{hashicorp_repo}}/nomad/{{nomad_version}}/{{nomad_target}}'
+    url: '{{hashicorp_repo}}/nomad/{{item.version}}/nomad_{{item.version}}_{{hashicorp_arch}}.{{nomad_format}}'
     dest: '{{hashicorp_dir_staging}}'
     timeout: '{{hashicorp_internet_timeout}}'
     validate_certs: false
+  loop: '{{nomad_builds}}'
+  when: item.state == 'present'
   tags: [ct-nomad]
 
-- name: 'expand archive'
+- name: 'create package directories'
+  file:
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+    path: '{{hashicorp_dir_pkg}}/nomad/{{item.version}}'
+  loop: '{{nomad_builds}}'
+  when: item.state == 'present'
+  ignore_errors: '{{ansible_check_mode}}'
+  become: true
+  tags: [ct-nomad]
+
+- name: 'expand archives'
   unarchive:
-    src: '{{hashicorp_dir_staging}}/{{nomad_target}}'
-    dest: '{{hashicorp_dir_bin}}'
+    src: '{{hashicorp_dir_staging}}/nomad_{{item.version}}_{{hashicorp_arch}}.{{nomad_format}}'
+    dest: '{{hashicorp_dir_pkg}}/nomad/{{item.version}}'
     copy: false
+  loop: '{{nomad_builds}}'
+  when: item.state == 'present'
+  ignore_errors: '{{ansible_check_mode}}'
+  become: true
+  tags: [ct-nomad]
+
+- name: 'add symlink to active binary'
+  file:
+    dest: '{{hashicorp_dir_bin}}/nomad'
+    src: '{{hashicorp_dir_pkg}}/nomad/{{nomad_version}}/nomad'
+    state: link
   become: true
   tags: [ct-nomad]
 
@@ -46,13 +72,14 @@
   become: true
   tags: [ct-nomad]
 
-- name: 'config file'
+- name: '{{nomad_role}} config file'
   template:
-    src: '{{nomad_role}}.hcl.j2'
+    backup: true
     dest: '{{nomad_etc_dir}}/{{nomad_role}}.hcl'
-    owner: root
     group: root
     mode: '0600'
+    owner: root
+    src: '{{nomad_role}}.hcl.j2'
   notify: handler_restart_nomad
   no_log: true
   become: true

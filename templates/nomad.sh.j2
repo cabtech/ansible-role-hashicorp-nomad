@@ -1,6 +1,18 @@
-# --------------------------------
-# bash include nomad.sh MANAGED_BY_ANSIBLE
-export PATH="{{hashicorp_dir_bin}}:${PATH}"
-alias nmd={{hashicorp_dir_bin}}/nomad
+# MANAGED_BY_ANSIBLE
+# bash include for Nomad
+
+export PATH="${PATH}:{{hashicorp_dir_bin}}"
 export NOMAD_ADDR=http://{{local_ipv4}}:{{nomad_port}}
-# --------------------------------
+
+alias  nas='nomad alloc status'
+alias nasv='nomad alloc status -verbose'
+alias  ngc='curl -X PUT http://{{local_ipv4}}:{{nomad_port}}/v1/system/gc'
+alias  njd='nomad job deployments'
+alias  njp='nomad job plan'
+alias  njr='nomad job run'
+alias  njs='nomad job status'
+alias  njv='nomad job validate'
+alias  nns='nomad node status'
+alias  nsm='nomad server members'
+
+# end

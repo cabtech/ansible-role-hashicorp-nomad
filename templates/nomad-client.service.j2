@@ -1,8 +1,10 @@
 [Unit]
-Description=Nomad startup process
+Description=Nomad {{nomad_role}}
+Documentation=https://nomadproject.io/docs/
 After=network.target
  
 [Service]
+ExecReload=/bin/kill -HUP $MAINPID
 ExecStart=/bin/bash -c '{{hashicorp_dir_bin}}/nomad agent -config={{nomad_etc_dir}}/client.hcl'
 Restart=always
 RestartSec=10

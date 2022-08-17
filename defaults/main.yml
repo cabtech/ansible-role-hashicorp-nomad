@@ -7,9 +7,11 @@ nomad_port: 4646
 nomad_role: client  # ...or server
 nomad_state: started
 nomad_log_dir: /var/log/nomad
-nomad_version: '0.9.6'
+nomad_version: '1.3.3'
 
-nomad_target: 'nomad_{{nomad_version}}_{{hashicorp_arch}}.{{nomad_format}}'
+nomad_builds:
+- {version: '1.3.0', state: present}
+- {version: '1.3.3', state: present}
 
 nomad_dirs:
 - '{{nomad_etc_dir}}'
