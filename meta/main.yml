@@ -2,4 +2,5 @@
 dependencies:
 - src: git+https://github.com/cabtech/ansible-role-hashicorp-common.git
   tags: ct-nomad
+  version: '2.0.0'
 ...
