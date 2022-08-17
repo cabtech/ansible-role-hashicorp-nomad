@@ -6,8 +6,7 @@
     dest: '{{hashicorp_dir_staging}}'
     timeout: '{{hashicorp_internet_timeout}}'
     validate_certs: false
-  tags:
-  - ct-nomad
+  tags: [ct-nomad]
 
 - name: 'expand archive'
   unarchive:
@@ -15,8 +14,7 @@
     dest: '{{hashicorp_dir_bin}}'
     copy: false
   become: true
-  tags:
-  - ct-nomad
+  tags: [ct-nomad]
 
 - name: 'system account'
   user:
@@ -25,8 +23,7 @@
     system: true
     state: present
   become: true
-  tags:
-  - ct-nomad
+  tags: [ct-nomad]
 
 - name: 'bash include'
   template:
@@ -36,8 +33,7 @@
     group: root
     mode: 0644
   become: true
-  tags:
-  - ct-nomad
+  tags: [ct-nomad]
 
 - name: 'directories'
   file:
@@ -48,8 +44,7 @@
     mode: '0755'
   loop: '{{nomad_dirs}}'
   become: true
-  tags:
-  - ct-nomad
+  tags: [ct-nomad]
 
 - name: 'config file'
   template:
@@ -61,8 +56,7 @@
   notify: handler_restart_nomad
   no_log: true
   become: true
-  tags:
-  - ct-nomad
+  tags: [ct-nomad]
 
 - name: 'systemd unit file'
   template:
@@ -73,8 +67,7 @@
     mode: '0600'
   register: reg_service
   become: true
-  tags:
-  - ct-nomad
+  tags: [ct-nomad]
 
 - name: 'nomad-{{nomad_role}} service to {{nomad_state}}'
   systemd:
@@ -83,8 +76,7 @@
     enabled: true
     daemon_reload: '{{reg_service is changed}}'
   become: true
-  tags:
-  - ct-nomad
+  tags: [ct-nomad]
 
 # --------------------------------
 ...
