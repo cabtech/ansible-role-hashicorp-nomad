@@ -1,12 +1,16 @@
 ---
+nomad_enable_ui: false
 nomad_etc_dir: /etc/nomad
 nomad_format: zip
 nomad_lib_dir: /var/lib/nomad
-nomad_log_level: DEBUG
-nomad_port: 4646
-nomad_role: client  # ...or server
-nomad_state: started
 nomad_log_dir: /var/log/nomad
+nomad_log_level: DEBUG
+nomad_plugin_docker: false
+nomad_plugin_raw_exec: false
+nomad_port: 4646
+nomad_publish_to_datadog: false
+nomad_role: client  # oneOf(client,server)
+nomad_state: started
 nomad_version: '1.3.3'
 
 nomad_builds:

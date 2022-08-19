@@ -39,6 +39,7 @@
     dest: '{{hashicorp_dir_bin}}/nomad'
     src: '{{hashicorp_dir_pkg}}/nomad/{{nomad_version}}/nomad'
     state: link
+  ignore_errors: '{{ansible_check_mode}}'
   become: true
   tags: [ct-nomad]
 
@@ -72,7 +73,7 @@
   become: true
   tags: [ct-nomad]
 
-- name: '{{nomad_role}} config file'
+- name: '{{nomad_role}} config file (NL)'
   template:
     backup: true
     dest: '{{nomad_etc_dir}}/{{nomad_role}}.hcl'

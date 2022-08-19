@@ -1,3 +1,4 @@
+# MANAGED_BY_ANSIBLE
 data_dir   = "{{nomad_lib_dir}}"
 datacenter = "{{consul_datacentre}}"
 
@@ -10,12 +11,47 @@ client {
   ]
 }
 
-{% if nomad_allow_raw_exec is defined %} 
+{% if (nomad_vault_active | default(false)) %}
+vault {
+  address = "{{nomad_vault_scheme}}://{{nomad_vault_addr}}"
+  enabled = true
+}
+{% else %}
+# nomad_vault_active is false
+{% endif %}
+
+{% if nomad_plugin_raw_exec %}
 plugin "raw_exec" {
   config {
     enabled = true
   }
 }
+{% else %}
+# nomad_plugin_raw_exec is not true
 {% endif %}
 
-# MANAGED_BY_ANSIBLE
+{% if nomad_plugin_docker %}
+plugin "docker" {
+  config {
+    auth {
+      config = "{{nomad_docker_config | default('/root/.docker/config.json') }}"
+    }
+  }
+}
+{% else %}
+# nomad_plugin_docker is not true
+{% endif %}
+
+{% if nomad_publish_to_datadog %}
+telemetry {
+  publish_allocation_metrics = true
+  publish_node_metrics       = true
+  datadog_address            = "localhost:8125"
+  disable_hostname           = true
+  collection_interval        = "10s"
+}
+{% else %}
+# nomad_publish_to_datadog is not true
+{% endif %}
+
+# end
