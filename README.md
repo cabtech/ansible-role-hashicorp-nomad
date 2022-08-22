@@ -21,7 +21,6 @@ None
 | nomad_role | string | oneOf(client,server) ||
 | nomad_state | string | started | anything supported by systemctl ||
 | nomad_version | string | '1.3.3' | defines which of the entries in `nomad_builds` is active |
-
 ```
 nomad_builds:
 - {version: '1.3.0', state: present}
@@ -39,6 +38,9 @@ nomad_builds:
 ```
 The nomad_vault_* variables are only needed if nomad_vault_token is defined
 ```
+
+## Role Dependencies
+- `ansible-role-hashicorp-common`
 
 ## Nomad versions
 Tag 2.x was built for Nomad `1.3`.  Tag 1.0.0 should work with anything pre `1.0`

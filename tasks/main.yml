@@ -1,9 +1,9 @@
 ---
 
 - name: 'download archive'
-  get_url:
+  ansible.builtin.get_url:
     url: '{{hashicorp_repo}}/nomad/{{item.version}}/nomad_{{item.version}}_{{hashicorp_arch}}.{{nomad_format}}'
-    dest: '{{hashicorp_dir_staging}}'
+    dest: '{{hashicorp_dir_staging}}/nomad_{{item.version}}_{{hashicorp_arch}}.{{nomad_format}}'
     timeout: '{{hashicorp_internet_timeout}}'
     validate_certs: false
   loop: '{{nomad_builds}}'
@@ -11,7 +11,7 @@
   tags: [ct-nomad]
 
 - name: 'create package directories'
-  file:
+  ansible.builtin.file:
     state: directory
     owner: root
     group: root
@@ -24,7 +24,7 @@
   tags: [ct-nomad]
 
 - name: 'expand archives'
-  unarchive:
+  ansible.builtin.unarchive:
     src: '{{hashicorp_dir_staging}}/nomad_{{item.version}}_{{hashicorp_arch}}.{{nomad_format}}'
     dest: '{{hashicorp_dir_pkg}}/nomad/{{item.version}}'
     copy: false
@@ -35,7 +35,7 @@
   tags: [ct-nomad]
 
 - name: 'add symlink to active binary'
-  file:
+  ansible.builtin.file:
     dest: '{{hashicorp_dir_bin}}/nomad'
     src: '{{hashicorp_dir_pkg}}/nomad/{{nomad_version}}/nomad'
     state: link
@@ -44,7 +44,7 @@
   tags: [ct-nomad]
 
 - name: 'system account'
-  user:
+  ansible.builtin.user:
     name: nomad
     comment: 'Nomad system account'
     system: true
@@ -53,7 +53,7 @@
   tags: [ct-nomad]
 
 - name: 'bash include'
-  template:
+  ansible.builtin.template:
     src: nomad.sh.j2
     dest: /usr/local/etc/bash.d/nomad.sh
     owner: root
@@ -63,7 +63,7 @@
   tags: [ct-nomad]
 
 - name: 'directories'
-  file:
+  ansible.builtin.file:
     state: directory
     path: '{{item}}'
     owner: root
@@ -74,7 +74,7 @@
   tags: [ct-nomad]
 
 - name: '{{nomad_role}} config file (NL)'
-  template:
+  ansible.builtin.template:
     backup: true
     dest: '{{nomad_etc_dir}}/{{nomad_role}}.hcl'
     group: root
@@ -87,7 +87,7 @@
   tags: [ct-nomad]
 
 - name: 'systemd unit file'
-  template:
+  ansible.builtin.template:
     src: nomad-{{nomad_role}}.service.j2
     dest: /etc/systemd/system/nomad-{{nomad_role}}.service
     owner: root
@@ -98,7 +98,7 @@
   tags: [ct-nomad]
 
 - name: 'nomad-{{nomad_role}} service to {{nomad_state}}'
-  systemd:
+  ansible.builtin.systemd:
     name: nomad-{{nomad_role}}
     state: '{{nomad_state}}'
     enabled: true
