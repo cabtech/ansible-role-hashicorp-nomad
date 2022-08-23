@@ -64,11 +64,11 @@
 
 - name: 'directories'
   ansible.builtin.file:
-    state: directory
-    path: '{{item}}'
-    owner: root
     group: root
-    mode: '0755'
+    mode: '{{item.mode}}'
+    owner: "{{ item.owner | default('root') }}"
+    path: '{{item.name}}'
+    state: directory
   loop: '{{nomad_dirs}}'
   become: true
   tags: [ct-nomad]

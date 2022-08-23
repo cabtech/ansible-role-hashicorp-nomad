@@ -18,8 +18,9 @@ nomad_builds:
 - {version: '1.3.3', state: present}
 
 nomad_dirs:
-- '{{nomad_etc_dir}}'
-- '{{nomad_lib_dir}}'
-- '{{nomad_lib_dir}}/plugins'
-- '{{nomad_log_dir}}'
+- {name: '{{nomad_etc_dir}}', mode: '0755'}
+- {name: '{{nomad_lib_dir}}', mode: '0755'}
+- {name: '{{nomad_lib_dir}}/plugins', mode: '0755'}
+- {name: '{{nomad_log_dir}}', mode: '0755'}
+- {name: '/usr/local/etc/nomad', mode: '0755', owner: nomad}
 ...
