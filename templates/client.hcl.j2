@@ -9,6 +9,10 @@ client {
     "{{ip}}:4647"{{ "," if not loop.last else "" }}
 {% endfor %}
   ]
+
+  meta {
+    function = "{{ hostvars[inventory_hostname]['function'] }}"
+  }
 }
 
 {% if (nomad_vault_active | default(false)) %}
