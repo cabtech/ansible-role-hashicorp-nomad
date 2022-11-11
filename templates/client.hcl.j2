@@ -38,7 +38,7 @@ plugin "raw_exec" {
 plugin "docker" {
   config {
     auth {
-      config = "{{nomad_docker_config | default('/root/.docker/config.json') }}"
+      config = "{{ nomad_docker_config_path }}"
     }
   }
 }
