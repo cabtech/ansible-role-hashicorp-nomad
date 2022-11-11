@@ -1,108 +1,130 @@
 ---
+# --------------------------------
 
-- name: 'download archive'
-  ansible.builtin.get_url:
-    url: '{{hashicorp_repo}}/nomad/{{item.version}}/nomad_{{item.version}}_{{hashicorp_arch}}.{{nomad_format}}'
-    dest: '{{hashicorp_dir_staging}}/nomad_{{item.version}}_{{hashicorp_arch}}.{{nomad_format}}'
-    timeout: '{{hashicorp_internet_timeout}}'
-    validate_certs: false
-  loop: '{{nomad_builds}}'
-  when: item.state == 'present'
-  tags: [ct-nomad]
-
-- name: 'create package directories'
+- name: "Create directories"
   ansible.builtin.file:
-    state: directory
-    owner: root
     group: root
-    mode: '0755'
-    path: '{{hashicorp_dir_pkg}}/nomad/{{item.version}}'
-  loop: '{{nomad_builds}}'
-  when: item.state == 'present'
-  ignore_errors: '{{ansible_check_mode}}'
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner | default('root') }}"
+    path: "{{ item.name }}"
+    state: directory
+  loop: "{{ nomad_dirs }}"
   become: true
   tags: [ct-nomad]
 
-- name: 'expand archives'
+- name: "Download CNI archive"
+  ansible.builtin.get_url:
+    dest: "{{ hashicorp_dir_staging }}/{{ nomad_cni_file }}"
+    mode: "0644"
+    timeout: "{{ hashicorp_internet_timeout }}"
+    url: "{{ nomad_cni_url }}"
+    validate_certs: false
+  when: nomad_role == "client"
+  tags: [ct-nomad]
+
+- name: "Expand CNI archive"
   ansible.builtin.unarchive:
-    src: '{{hashicorp_dir_staging}}/nomad_{{item.version}}_{{hashicorp_arch}}.{{nomad_format}}'
-    dest: '{{hashicorp_dir_pkg}}/nomad/{{item.version}}'
     copy: false
-  loop: '{{nomad_builds}}'
-  when: item.state == 'present'
-  ignore_errors: '{{ansible_check_mode}}'
+    dest: "{{ nomad_cni_dir }}/bin"
+    src: "{{ hashicorp_dir_staging }}/{{ nomad_cni_file }}"
+  when: nomad_role == "client"
+  ignore_errors: "{{ ansible_check_mode }}"
   become: true
   tags: [ct-nomad]
 
-- name: 'add symlink to active binary'
+- name: "Download Nomad archives"
+  ansible.builtin.get_url:
+    dest: "{{ hashicorp_dir_staging }}/nomad_{{ item.version }}_{{ hashicorp_arch }}.{{ nomad_format }}"
+    mode: "0644"
+    timeout: "{{ hashicorp_internet_timeout }}"
+    url: "{{ hashicorp_repo }}/nomad/{{ item.version }}/nomad_{{ item.version }}_{{ hashicorp_arch }}.{{ nomad_format }}"
+    validate_certs: false
+  loop: "{{ nomad_builds }}"
+  when: item.state == "present"
+  tags: [ct-nomad]
+
+- name: "Create package directories"
   ansible.builtin.file:
-    dest: '{{hashicorp_dir_bin}}/nomad'
-    src: '{{hashicorp_dir_pkg}}/nomad/{{nomad_version}}/nomad'
-    state: link
-  ignore_errors: '{{ansible_check_mode}}'
-  become: true
-  tags: [ct-nomad]
-
-- name: 'system account'
-  ansible.builtin.user:
-    name: nomad
-    comment: 'Nomad system account'
-    system: true
-    state: present
-  become: true
-  tags: [ct-nomad]
-
-- name: 'bash include'
-  ansible.builtin.template:
-    src: nomad.sh.j2
-    dest: /usr/local/etc/bash.d/nomad.sh
+    group: root
+    mode: "0755"
     owner: root
+    path: "{{ hashicorp_dir_pkg }}/nomad/{{ item.version }}"
+    state: directory
+  loop: "{{ nomad_builds }}"
+  when: item.state == "present"
+  ignore_errors: "{{ ansible_check_mode }}"
+  become: true
+  tags: [ct-nomad]
+
+- name: "Expand archives"
+  ansible.builtin.unarchive:
+    copy: false
+    dest: "{{ hashicorp_dir_pkg }}/nomad/{{ item.version }}"
+    src: "{{ hashicorp_dir_staging }}/nomad_{{ item.version }}_{{ hashicorp_arch }}.{{ nomad_format }}"
+  loop: "{{ nomad_builds }}"
+  when: item.state == "present"
+  ignore_errors: "{{ ansible_check_mode }}"
+  become: true
+  tags: [ct-nomad]
+
+- name: "Add symlink to active binary"
+  ansible.builtin.file:
+    dest: "{{ hashicorp_dir_bin }}/nomad"
+    src: "{{ hashicorp_dir_pkg }}/nomad/{{ nomad_version }}/nomad"
+    state: link
+  ignore_errors: "{{ ansible_check_mode }}"
+  become: true
+  tags: [ct-nomad]
+
+- name: "Add system account"
+  ansible.builtin.user:
+    comment: "Nomad system account"
+    name: nomad
+    state: present
+    system: true
+  become: true
+  tags: [ct-nomad]
+
+- name: "Add bash include"
+  ansible.builtin.template:
+    dest: /usr/local/etc/bash.d/nomad.sh
     group: root
     mode: 0644
+    owner: root
+    src: nomad.sh.j2
   become: true
   tags: [ct-nomad]
 
-- name: 'directories'
-  ansible.builtin.file:
-    group: root
-    mode: '{{item.mode}}'
-    owner: "{{ item.owner | default('root') }}"
-    path: '{{item.name}}'
-    state: directory
-  loop: '{{nomad_dirs}}'
-  become: true
-  tags: [ct-nomad]
-
-- name: '{{nomad_role}} config file (NL)'
+- name: "Render {{ nomad_role }} config file (NL)"
   ansible.builtin.template:
     backup: true
-    dest: '{{nomad_etc_dir}}/{{nomad_role}}.hcl'
+    dest: "{{ nomad_etc_dir }}/{{ nomad_role }}.hcl"
     group: root
-    mode: '0600'
+    mode: "0600"
     owner: root
-    src: '{{nomad_role}}.hcl.j2'
-  notify: handler_restart_nomad
+    src: "{{ nomad_role }}.hcl.j2"
+  notify: Handler_Restart_Nomad
   no_log: true
   become: true
   tags: [ct-nomad]
 
-- name: 'systemd unit file'
+- name: "Systemd unit file"
   ansible.builtin.template:
-    src: nomad-{{nomad_role}}.service.j2
-    dest: /etc/systemd/system/nomad-{{nomad_role}}.service
-    owner: root
+    dest: /etc/systemd/system/nomad-{{ nomad_role }}.service
     group: root
-    mode: '0600'
+    mode: "0600"
+    owner: root
+    src: nomad-{{ nomad_role }}.service.j2
   register: reg_service
   become: true
   tags: [ct-nomad]
 
-- name: 'nomad-{{nomad_role}} service to {{nomad_state}}'
+- name: "Set nomad-{{ nomad_role }} service to {{ nomad_state }}"
   ansible.builtin.systemd:
-    name: nomad-{{nomad_role}}
-    state: '{{nomad_state}}'
+    daemon_reload: "{{ reg_service is changed }}"
     enabled: true
-    daemon_reload: '{{reg_service is changed}}'
+    name: nomad-{{ nomad_role }}
+    state: "{{ nomad_state }}"
   become: true
   tags: [ct-nomad]
 
