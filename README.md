@@ -8,6 +8,7 @@ None
 | Name | Type | Value | Purpose |
 | ---- | ---- | ----- | ------- |
 | nomad_builds | see below | see below | decides with versions of the binary to install |
+| nomad_docker_allow_volumes | Boolean | false | whether a Nomad client should allow Docker volumes |
 | nomad_enable_ui | Boolean | false ||
 | nomad_etc_dir | UnixPath | `/etc/nomad` | where the config lives |
 | nomad_format | string | zip | used to work out the name of the Nomad archive |

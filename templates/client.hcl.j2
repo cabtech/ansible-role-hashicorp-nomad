@@ -40,6 +40,9 @@ plugin "docker" {
     auth {
       config = "{{ nomad_docker_config_path }}"
     }
+    volumes {
+      enabled = {{ nomad_docker_allow_volumes | lower }}
+    }
   }
 }
 {% else %}
