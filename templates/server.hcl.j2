@@ -33,6 +33,14 @@ ui {
 # nomad_enable_ui is false
 {% endif %}
 
+{% if nomad_server_consul_token is defined %}
+consul {
+  token = "{{ nomad_server_consul_token }}"
+}
+{% else %}
+# nomad_server_consul_token is not defined
+{% endif %}
+
 {% if nomad_vault_token is defined %}
 vault {
   address          = "{{nomad_vault_scheme}}://{{nomad_vault_addr}}"
