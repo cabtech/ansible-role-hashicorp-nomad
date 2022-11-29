@@ -95,7 +95,7 @@
   become: true
   tags: [ct-nomad]
 
-- name: "Render {{ nomad_role }} config file (NL)"
+- name: "Render {{ nomad_role }} config file (no_log)"
   ansible.builtin.template:
     backup: true
     dest: "{{ nomad_etc_dir }}/{{ nomad_role }}.hcl"
