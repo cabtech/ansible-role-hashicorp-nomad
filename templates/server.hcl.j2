@@ -1,7 +1,7 @@
 # MANAGED_BY_ANSIBLE
-data_dir   = "{{nomad_lib_dir}}"
-datacenter = "{{consul_datacentre}}"
-log_level  = "{{nomad_log_level}}"
+data_dir   = "{{ nomad_lib_dir }}"
+datacenter = "{{ consul_datacentre }}"
+log_level  = "{{ nomad_log_level }}"
 
 server {
   bootstrap_expect = 3
@@ -25,7 +25,7 @@ ui {
   enabled = true
 {% if nomad_consul_url is defined %}
   consul {
-    ui_url = "{{nomad_consul_url}}"
+    ui_url = "{{ nomad_consul_url }}"
   }
 {% endif %}
 }
@@ -33,20 +33,20 @@ ui {
 # nomad_enable_ui is false
 {% endif %}
 
-{% if nomad_server_consul_token is defined %}
+{% if nomad_consul_server_token is defined %}
 consul {
-  token = "{{ nomad_server_consul_token }}"
+  token = "{{ nomad_consul_server_token }}"
 }
 {% else %}
-# nomad_server_consul_token is not defined
+# nomad_consul_server_token is not defined
 {% endif %}
 
 {% if nomad_vault_token is defined %}
 vault {
-  address          = "{{nomad_vault_scheme}}://{{nomad_vault_addr}}"
-  create_from_role = "{{nomad_vault_role}}"
+  address          = "{{ nomad_vault_scheme }}://{{ nomad_vault_addr }}"
+  create_from_role = "{{ nomad_vault_role }}"
   enabled          = true
-  token            = "{{nomad_vault_token}}"
+  token            = "{{ nomad_vault_token }}"
 }
 {% else %}
 # nomad_vault_token is not defined

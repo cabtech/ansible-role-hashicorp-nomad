@@ -1,12 +1,12 @@
 # MANAGED_BY_ANSIBLE
-data_dir   = "{{nomad_lib_dir}}"
-datacenter = "{{consul_datacentre}}"
+data_dir   = "{{ nomad_lib_dir }}"
+datacenter = "{{ consul_datacentre }}"
 
 client {
   enabled          = true
   servers          = [
   {% for ip in nomad_servers %}
-    "{{ip}}:4647"{{ "," if not loop.last else "" }}
+    "{{ ip }}:4647"{{ "," if not loop.last else "" }}
 {% endfor %}
   ]
 
@@ -15,17 +15,17 @@ client {
   }
 }
 
-{% if nomad_client_consul_token is defined %}
+{% if nomad_consul_client_token is defined %}
 consul {
-  token = "{{ nomad_client_consul_token }}"
+  token = "{{ nomad_consul_client_token }}"
 }
 {% else %}
-# nomad_client_consul_token is not defined
+# nomad_consul_client_token is not defined
 {% endif %}
 
 {% if (nomad_vault_active | default(false)) %}
 vault {
-  address = "{{nomad_vault_scheme}}://{{nomad_vault_addr}}"
+  address = "{{ nomad_vault_scheme }}://{{ nomad_vault_addr }}"
   enabled = true
 }
 {% else %}

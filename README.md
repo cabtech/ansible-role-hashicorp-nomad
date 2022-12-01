@@ -31,9 +31,9 @@ nomad_builds:
 ## Optional variables
 | Name | Type | Purpose | Example |
 | ---- | ---- | ------- | ------- |
-| nomad_client_consul_token | UUID | add this if using Consul ACLs | use the output from `consul acl token create` |
+| nomad_consul_client_token | UUID | add this if using Consul ACLs | use the output from `consul acl token create` |
+| nomad_consul_server_token | UUID | add this if using Consul ACLs | use the output from `consul acl token create` |
 | nomad_consul_url | URL | If defined, Nomad UI will integrate with Consul UI | `https://consul.example.com/ui` |
-| nomad_server_consul_token | UUID | add this if using Consul ACLs | use the output from `consul acl token create` |
 | nomad_vault_addr | IPv4 | role to use on Vault ||
 | nomad_vault_role | string | role to use on Vault ||
 | nomad_vault_scheme | string | oneOf(http,https) ||
