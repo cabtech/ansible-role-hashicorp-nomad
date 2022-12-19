@@ -20,7 +20,8 @@ None
 | nomad_port | integer | 4646 | where the Nomad UI listens |
 | nomad_publish_to_datadog | Boolean | false ||
 | nomad_role | string | oneOf(client,server) ||
-| nomad_state | string | started | anything supported by systemctl ||
+| nomad_svc_enabled | Boolean | true | whether to start the service after reboot ||
+| nomad_svc_state | string | started | anything supported by systemctl ||
 | nomad_version | string | '1.3.3' | defines which of the entries in `nomad_builds` is active |
 ```
 nomad_builds:
@@ -47,4 +48,10 @@ The nomad_vault_* variables are only needed if nomad_vault_token is defined
 
 ## Nomad versions
 Tag 2.x was built for Nomad `1.3`.  Tag 1.0.0 should work with anything pre `1.0`
+
+## Release Notes
+### 2.7.0
+`nomad_state` was replaced by `nomad_svc_state`
+Introduced `nomad_svc_enabled` to replace hard-coded `true`
+
 ****

@@ -122,9 +122,9 @@
 - name: "Set nomad-{{ nomad_role }} service to {{ nomad_state }}"
   ansible.builtin.systemd:
     daemon_reload: "{{ reg_service is changed }}"
-    enabled: true
+    enabled: "{{ nomad_svc_enabled | bool | lower }}"
     name: nomad-{{ nomad_role }}
-    state: "{{ nomad_state }}"
+    state: "{{ nomad_svc_state }}"
   become: true
   tags: [ct-nomad]
 

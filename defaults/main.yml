@@ -21,7 +21,8 @@ nomad_plugin_raw_exec: true
 nomad_port: 4646
 nomad_publish_to_datadog: false
 nomad_role: client  # oneOf(client,server)
-nomad_state: started
+nomad_svc_enabled: true
+nomad_svc_state: started
 nomad_vault_addr: "active.vault.service.consul:8200"
 nomad_vault_role: "nomad-cluster"
 nomad_vault_scheme: "http"
