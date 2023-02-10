@@ -95,6 +95,16 @@
   become: true
   tags: [ct-nomad]
 
+- name: "Script to validate Nomad job files"
+  ansible.builtin.copy:
+    dest: /usr/local/bin/nomad-validate-jobs.sh
+    group: root
+    mode: 0755
+    owner: root
+    src: nomad-validate-jobs.sh
+  become: true
+  tags: [ct-nomad]
+
 - name: "Render {{ nomad_role }} config file (no_log)"
   ansible.builtin.template:
     backup: true
