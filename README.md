@@ -2,7 +2,10 @@
 # ansible-role-hashicorp-nomad
 
 ## Required variables
-None
+| Name | Type | Purpose |
+| ---- | ---- | ------- |
+| local_ipv4 | IPv4 | internal IP address of the node |
+| nomad_servers | list(IPv4) | IP addresses of the Nomad servers |
 
 ## Default variables
 | Name | Type | Value | Purpose |
@@ -53,5 +56,11 @@ Tag 2.x was built for Nomad `1.3`.  Tag 1.0.0 should work with anything pre `1.0
 ### 2.7.0
 `nomad_state` was replaced by `nomad_svc_state`
 Introduced `nomad_svc_enabled` to replace hard-coded `true`
+### 2.7.2
+Stop hardcoding number of Nomad servers to be 3
+### 2.8.0
+Update licence
+### 2.9.0
+Added generic script for validating Nomad job files
 
 ****
