@@ -10,7 +10,7 @@
 ## Default variables
 | Name | Type | Value | Purpose |
 | ---- | ---- | ----- | ------- |
-| nomad_builds | see below | see below | decides with versions of the binary to install |
+| nomad_builds | dict | see below | decides with versions of the binary to install |
 | nomad_docker_allow_volumes | Boolean | false | whether a Nomad client should allow Docker volumes |
 | nomad_enable_ui | Boolean | false ||
 | nomad_etc_dir | UnixPath | `/etc/nomad` | where the config lives |
@@ -24,7 +24,7 @@
 | nomad_publish_to_datadog | Boolean | false ||
 | nomad_role | string | oneOf(client,server) ||
 | nomad_svc_enabled | Boolean | true | whether to start the service after reboot ||
-| nomad_svc_state | string | started | anything supported by systemctl ||
+| nomad_svc_state | SystemCtlStatus | started | oneOf(restarted, started, stopped) ||
 | nomad_version | string | '1.3.3' | defines which of the entries in `nomad_builds` is active |
 ```
 nomad_builds:
@@ -45,6 +45,11 @@ nomad_builds:
 ```
 The nomad_vault_* variables are only needed if nomad_vault_token is defined
 ```
+
+## Experimental variables
+| Name | Type | Purpose | Comment |
+| ---- | ---- | ------- | ------- |
+| nomad_render_templates_once | Boolean | If defined for a client, will add client.template.render_templates_once | Requires custom Nomad build |
 
 ## Role Dependencies
 - `ansible-role-hashicorp-common`

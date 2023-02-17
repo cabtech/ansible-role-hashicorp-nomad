@@ -11,8 +11,13 @@ client {
   ]
 
   meta {
-    function = "{{ hostvars[inventory_hostname]['function'] }}"
+    function = "{{ hostvars[inventory_hostname]['function'] | default('UndefinedFunction') }}"
   }
+{% if nomad_render_templates_once is defined %}
+  template {
+      render_templates_once = {{ nomad_render_templates_once | lower }}
+  }
+{% endif %}
 }
 
 {% if nomad_consul_client_token is defined %}
