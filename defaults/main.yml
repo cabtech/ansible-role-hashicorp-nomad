@@ -1,13 +1,23 @@
 ---
 # --------------------------------
 
+nomad_builds:
+- {version: "1.5.3", state: present}
+- {version: "1.5.4", state: present}
 nomad_cni_arch: amd64
 nomad_cni_dir: /opt/cni
 nomad_cni_version: "v1.0.0"
 nomad_cni_site: "https://github.com/containernetworking/plugins/releases/download"
 nomad_cni_file: "cni-plugins-linux-{{ nomad_cni_arch }}-{{ nomad_cni_version }}.tgz"
 nomad_cni_url: "{{ nomad_cni_site }}/{{ nomad_cni_version }}/{{ nomad_cni_file }}"
-
+nomad_dirs:
+- {name: "{{ nomad_cni_dir }}", mode: "0755"}
+- {name: "{{ nomad_cni_dir }}/bin", mode: "0775"}
+- {name: "{{ nomad_etc_dir }}", mode: "0755"}
+- {name: "{{ nomad_lib_dir }}", mode: "0755"}
+- {name: "{{ nomad_lib_dir }}/plugins", mode: "0755"}
+- {name: "{{ nomad_log_dir }}", mode: "0755"}
+- {name: "/usr/local/etc/nomad", mode: "0755", owner: nomad}
 nomad_docker_allow_volumes: false
 nomad_docker_config_path: "/root/.docker/config.json"
 nomad_enable_ui: true
@@ -26,22 +36,7 @@ nomad_svc_state: started
 nomad_vault_addr: "active.vault.service.consul:8200"
 nomad_vault_role: "nomad-cluster"
 nomad_vault_scheme: "http"
-nomad_version: "1.3.3"
-
-nomad_builds:
-- {version: "1.3.0", state: absent}
-- {version: "1.3.3", state: present}
-- {version: "1.3.8", state: present}
-- {version: "1.4.3", state: present}
-
-nomad_dirs:
-- {name: "{{ nomad_cni_dir }}", mode: "0755"}
-- {name: "{{ nomad_cni_dir }}/bin", mode: "0775"}
-- {name: "{{ nomad_etc_dir }}", mode: "0755"}
-- {name: "{{ nomad_lib_dir }}", mode: "0755"}
-- {name: "{{ nomad_lib_dir }}/plugins", mode: "0755"}
-- {name: "{{ nomad_log_dir }}", mode: "0755"}
-- {name: "/usr/local/etc/nomad", mode: "0755", owner: nomad}
+nomad_version: "1.5.4"
 
 # --------------------------------
 ...
