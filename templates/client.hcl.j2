@@ -19,35 +19,29 @@ client {
   }
 {% endif %}
 }
-
 {% if nomad_consul_client_token is defined %}
+
 consul {
   token = "{{ nomad_consul_client_token }}"
 }
-{% else %}
-# nomad_consul_client_token is not defined
 {% endif %}
+{% if nomad_vault_token is defined %}
 
-{% if (nomad_vault_active | default(false)) %}
 vault {
   address = "{{ nomad_vault_scheme }}://{{ nomad_vault_addr }}"
   enabled = true
 }
-{% else %}
-# nomad_vault_active is false
 {% endif %}
-
 {% if nomad_plugin_raw_exec %}
+
 plugin "raw_exec" {
   config {
     enabled = true
   }
 }
-{% else %}
-# nomad_plugin_raw_exec is not true
 {% endif %}
-
 {% if nomad_plugin_docker %}
+
 plugin "docker" {
   config {
     auth {
@@ -58,11 +52,9 @@ plugin "docker" {
     }
   }
 }
-{% else %}
-# nomad_plugin_docker is not true
 {% endif %}
-
 {% if nomad_publish_to_datadog %}
+
 telemetry {
   publish_allocation_metrics = true
   publish_node_metrics       = true
@@ -70,8 +62,6 @@ telemetry {
   disable_hostname           = true
   collection_interval        = "10s"
 }
-{% else %}
-# nomad_publish_to_datadog is not true
 {% endif %}
 
 # end
