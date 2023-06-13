@@ -10,6 +10,7 @@ nomad_cni_version: "v1.0.0"
 nomad_cni_site: "https://github.com/containernetworking/plugins/releases/download"
 nomad_cni_file: "cni-plugins-linux-{{ nomad_cni_arch }}-{{ nomad_cni_version }}.tgz"
 nomad_cni_url: "{{ nomad_cni_site }}/{{ nomad_cni_version }}/{{ nomad_cni_file }}"
+nomad_consul_addr: "127.0.0.1"
 nomad_dirs:
 - {name: "{{ nomad_cni_dir }}", mode: "0755"}
 - {name: "{{ nomad_cni_dir }}/bin", mode: "0775"}
