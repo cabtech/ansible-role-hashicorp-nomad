@@ -5,18 +5,14 @@ datacenter = "{{ consul_datacentre }}"
 client {
   enabled          = true
   servers          = [
-  {% for ip in nomad_servers %}
+{% for ip in nomad_servers %}
     "{{ ip }}:4647"{{ "," if not loop.last else "" }}
 {% endfor %}
   ]
 
   meta {
     function = "{{ hostvars[inventory_hostname]['function'] | default('UndefinedFunction') }}"
-    functions = [
-{% for kk in (hostvars[inventory_hostname]["functions"] | default([])) %}
-      "{{ kk }}",
-{% endfor %}
-    ]
+    functions = "{{ (hostvars[inventory_hostname]['functions'] | default([])) | join(',') }}"
   }
 {% if nomad_render_templates_once is defined %}
   template {
