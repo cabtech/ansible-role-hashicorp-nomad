@@ -12,6 +12,11 @@ client {
 
   meta {
     function = "{{ hostvars[inventory_hostname]['function'] | default('UndefinedFunction') }}"
+    functions = [
+{% for kk in (hostvars[inventory_hostname]["functions"] | default([])) %}
+      "{{ kk }}",
+{% endfor %}
+    ]
   }
 {% if nomad_render_templates_once is defined %}
   template {
