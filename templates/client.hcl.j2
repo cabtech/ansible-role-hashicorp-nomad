@@ -20,12 +20,13 @@ client {
   }
 {% endif %}
 }
-{% if nomad_consul_client_token is defined %}
 
 consul {
-  token = "{{ nomad_consul_client_token }}"
-}
+  address = "{{ nomad_consul_addr }}:8500"
+{% if nomad_consul_client_token is defined %}
+  token   = "{{ nomad_consul_client_token }}"
 {% endif %}
+}
 {% if nomad_vault_token is defined %}
 
 vault {
