@@ -55,14 +55,25 @@ plugin "docker" {
   }
 }
 {% endif %}
-{% if nomad_statsd_enable %}
+{% if nomad_telemetry_enabled %}
 
 telemetry {
   collection_interval        = "10s"
   disable_hostname           = true
   publish_allocation_metrics = true
   publish_node_metrics       = true
-  statsd_address             = "{{ nomad_statsd_hostname }}:{{ nomad_statsd_port }}"
+{%		if nomad_telemetry_type == "datadog" %}
+  datadog_address            = "{{ nomad_telemetry_hostname }}:{{ nomad_telemetry_port }}"
+{%			if (nomad_telemetry_tags | length) > 0 %}
+  datadog_tags               = [
+{%				for kk in nomad_telemetry_tags %}
+  "{{ kk }}",
+{%				endfor %}
+  ]
+{%			endif %}
+{%		elif nomad_telemetry_type == "statsd" %}
+  statsd_address             = "{{ nomad_telemetry_hostname }}:{{ nomad_telemetry_port }}"
+{%		endif %}
 }
 {% endif %}
 

@@ -22,9 +22,11 @@
 | nomad_plugin_docker | Boolean | false ||
 | nomad_port | integer | 4646 | where the Nomad UI listens |
 | nomad_role | string | oneOf(client,server) ||
-| nomad_statsd_enable | Boolean | false ||
-| nomad_statsd_hostname | string | localhost ||
-| nomad_statsd_port | integer | 8125 ||
+| nomad_telemetry_enabled | Boolean | false ||
+| nomad_telemetry_hostname | string | localhost ||
+| nomad_telemetry_port | integer | 8125 ||
+| nomad_telemetry_tags | list(string) | [] | string format = "name:value" |
+| nomad_telemetry_type | string | statsd | oneOf(datadog,statsd) |
 | nomad_svc_enabled | Boolean | true | whether to start the service after reboot ||
 | nomad_svc_state | SystemCtlStatus | started | oneOf(restarted, started, stopped) ||
 | nomad_version | string | '1.3.3' | defines which of the entries in `nomad_builds` is active |

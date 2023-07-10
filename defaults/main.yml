@@ -30,10 +30,14 @@ nomad_log_level: DEBUG
 nomad_plugin_docker: true
 nomad_plugin_raw_exec: true
 nomad_port: 4646
-nomad_publish_to_datadog: false
 nomad_role: client  # oneOf(client,server)
 nomad_svc_enabled: true
 nomad_svc_state: started
+nomad_telemetry_enabled: false
+nomad_telemetry_hostname: localhost
+nomad_telemetry_port: 8125
+nomad_telemetry_tags: []
+nomad_telemetry_type: statsd
 nomad_vault_addr: "active.vault.service.consul:8200"
 nomad_vault_role: "nomad-cluster"
 nomad_vault_scheme: "http"
