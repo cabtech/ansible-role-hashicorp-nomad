@@ -12,7 +12,7 @@
 
 - name: "Create directories"
   ansible.builtin.file:
-    group: root
+    group: "{{ item.group | default('root') }}"
     mode: "{{ item.mode }}"
     owner: "{{ item.owner | default('root') }}"
     path: "{{ item.name }}"

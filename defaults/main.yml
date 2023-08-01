@@ -18,7 +18,7 @@ nomad_dirs:
 - {name: "{{ nomad_lib_dir }}", mode: "0755"}
 - {name: "{{ nomad_lib_dir }}/plugins", mode: "0755"}
 - {name: "{{ nomad_log_dir }}", mode: "0755"}
-- {name: "/usr/local/etc/nomad", mode: "0755", owner: nomad}
+- {name: "/usr/local/etc/nomad", mode: "0755"}
 nomad_docker_allow_volumes: false
 nomad_docker_config_path: "/root/.docker/config.json"
 nomad_enable_ui: true
