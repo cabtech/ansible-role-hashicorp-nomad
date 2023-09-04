@@ -21,7 +21,7 @@
   become: true
   tags: [ct-nomad]
 
-- name: "Download CNI archive"
+- name: "Download CNI archive (IECM)"
   ansible.builtin.get_url:
     dest: "{{ hashicorp_dir_staging }}/{{ nomad_cni_file }}"
     mode: "0644"
@@ -29,9 +29,10 @@
     url: "{{ nomad_cni_url }}"
     validate_certs: false
   when: nomad_role == "client"
+  ignore_errors: "{{ ansible_check_mode }}"
   tags: [ct-nomad]
 
-- name: "Expand CNI archive"
+- name: "Expand CNI archive (IECM)"
   ansible.builtin.unarchive:
     copy: false
     dest: "{{ nomad_cni_dir }}/bin"
@@ -52,7 +53,7 @@
   when: item.state == "present"
   tags: [ct-nomad]
 
-- name: "Create package directories"
+- name: "Create package directories (IECM)"
   ansible.builtin.file:
     group: root
     mode: "0755"
@@ -65,7 +66,7 @@
   become: true
   tags: [ct-nomad]
 
-- name: "Expand archives"
+- name: "Expand archives (IECM)"
   ansible.builtin.unarchive:
     copy: false
     dest: "{{ hashicorp_dir_pkg }}/nomad/{{ item.version }}"
@@ -76,7 +77,7 @@
   become: true
   tags: [ct-nomad]
 
-- name: "Add symlink to active binary"
+- name: "Add symlink to active binary (IECM)"
   ansible.builtin.file:
     dest: "{{ hashicorp_dir_bin }}/nomad"
     src: "{{ hashicorp_dir_pkg }}/nomad/{{ nomad_version }}/nomad"
