@@ -5,7 +5,6 @@
 | Name | Type | Purpose |
 | ---- | ---- | ------- |
 | local_ipv4 | IPv4 | internal IP address of the node |
-| nomad_servers | list(IPv4) | IP addresses of the Nomad servers |
 
 ## Default variables
 | Name | Type | Value | Purpose |
@@ -22,6 +21,7 @@
 | nomad_plugin_docker | Boolean | false ||
 | nomad_port | integer | 4646 | where the Nomad UI listens |
 | nomad_role | string | oneOf(client,server) ||
+| nomad_servers | list(IPv4) | [] | IP addrs of the Nomad server agents |
 | nomad_telemetry_enabled | Boolean | false ||
 | nomad_telemetry_hostname | string | localhost ||
 | nomad_telemetry_port | integer | 8125 ||

@@ -106,7 +106,7 @@
   become: true
   tags: [ct-nomad]
 
-- name: "Render config file (no_log)"
+- name: "Render config file (NL)"
   ansible.builtin.template:
     backup: true
     dest: "{{ nomad_etc_dir }}/{{ nomad_role }}.hcl"
@@ -114,8 +114,17 @@
     mode: "0600"
     owner: root
     src: "{{ nomad_role }}.hcl.j2"
+  when: (nomad_servers | length) > 0
   notify: Handler_Restart_Nomad
   no_log: true
+  become: true
+  tags: [ct-nomad]
+
+- name: "Remove config file as no servers"
+  ansible.builtin.file:
+    path: "{{ nomad_etc_dir }}/{{ nomad_role }}.hcl"
+    state: absent
+  when: (nomad_servers | length) == 0
   become: true
   tags: [ct-nomad]
 
@@ -126,7 +135,16 @@
     mode: "0644"
     owner: root
     src: nomad-{{ nomad_role }}.service.j2
+  when: (nomad_servers | length) > 0
   register: reg_service
+  become: true
+  tags: [ct-nomad]
+
+- name: "Systemd unit file"
+  ansible.builtin.file:
+    path: /etc/systemd/system/nomad-{{ nomad_role }}.service
+    state: absent
+  when: (nomad_servers | length) == 0
   become: true
   tags: [ct-nomad]
 
@@ -136,6 +154,7 @@
     enabled: "{{ nomad_svc_enabled | bool | lower }}"
     name: nomad-{{ nomad_role }}
     state: "{{ nomad_svc_state }}"
+  when: (nomad_servers | length) > 0
   become: true
   tags: [ct-nomad]
 
