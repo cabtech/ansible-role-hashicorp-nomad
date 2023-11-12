@@ -42,6 +42,7 @@ nomad_builds:
 | nomad_consul_client_token | UUID | add this if using Consul ACLs | use the output from `consul acl token create` |
 | nomad_consul_server_token | UUID | add this if using Consul ACLs | use the output from `consul acl token create` |
 | nomad_consul_url | URL | If defined, Nomad UI will integrate with Consul UI | `https://consul.example.com/ui` |
+| nomad_nodename | string | if set, then the Nomad client or server will be called this instead of `hostname` | `{{ inventory_hostname }}` |
 | nomad_vault_addr | IPv4 | role to use on Vault ||
 | nomad_vault_role | string | role to use on Vault ||
 | nomad_vault_scheme | string | oneOf(http,https) ||
@@ -62,6 +63,8 @@ The nomad_vault_* variables are only needed if nomad_vault_token is defined
 Tag 2.x was built for Nomad `1.3`.  Tag 1.0.0 should work with anything pre `1.0`
 
 ## Release Notes
+### 3.8.0
+Introduce variable `nomad_nodename` which, if set, is used to name the Nomad client or server.  Typically, would be used to set hostname=`{{ inventory_hostname }}`.
 ### 2.7.0
 `nomad_state` was replaced by `nomad_svc_state`
 Introduced `nomad_svc_enabled` to replace hard-coded `true`

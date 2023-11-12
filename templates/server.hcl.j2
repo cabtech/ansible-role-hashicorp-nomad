@@ -2,6 +2,9 @@
 data_dir   = "{{ nomad_lib_dir }}"
 datacenter = "{{ consul_datacentre }}"
 log_level  = "{{ nomad_log_level }}"
+{%	if nomad_nodename is defined %}
+name       = "{{ nomad_nodename }}"
+{%	endif %}
 
 consul {
   address = "{{ nomad_consul_addr }}:8500"
