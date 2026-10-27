@@ -1,6 +1,6 @@
 #!/bin/bash
 
-prog=$(basename $0)
+prog=$(basename "$0")
 
 ss_workdir=""
 ss_verbose=false
@@ -18,21 +18,22 @@ if [[ ! -d "${ss_workdir}" ]]; then
 else
 	fname=/usr/local/etc/bash.d/nomad.sh
 	if [[ -r "$fname" ]]; then
-		source $fname
+		# shellcheck disable=SC1090
+		source "$fname"
 	fi
 
-	cd ${ss_workdir}
+	cd "${ss_workdir}" || exit
 	for kk in *.nomad; do
 		if $ss_verbose; then
 			echo "# --------------------------------"
-			echo $kk
-			nomad job validate $kk
+			echo "$kk"
+			nomad job validate "$kk"
 		else
-			nomad job validate $kk > /dev/null 2>&1
+			nomad job validate "$kk" > /dev/null 2>&1
 			status=$?
 			if ((status!=0)); then
-				echo $kk
-				nomad job validate $kk
+				echo "$kk"
+				nomad job validate "$kk"
 			fi
 		fi
 	done
