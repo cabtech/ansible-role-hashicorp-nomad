@@ -3,4 +3,12 @@ dependencies:
 - src: git+https://github.com/cabtech/ansible-role-hashicorp-common.git
   tags: ct-nomad
   version: "2.3.0"
+
+galaxy_info:
+  author: Tim Short
+  description: Install Hashicorp Nomad
+  license: GPL v3
+  role_name: ansible_role_hashicorp_nomad
+  min_ansible_version: "2"
+  namespace: cabtech
 ...

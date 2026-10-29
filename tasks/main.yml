@@ -1,6 +1,23 @@
 ---
 # --------------------------------
 
+- name: "Include variables wrapper"
+  ansible.builtin.include_tasks:
+    file: variables.yml
+  tags: ["ct-nomad"]
+
+- name: "Disto/Family tasks (FF)"
+  ansible.builtin.include_tasks:
+    file: "{{ lookup('ansible.builtin.first_found', params) }}"
+  vars:
+    params:
+      files:
+      - "{{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_major_version'].split('.')[0] }}.yml"
+      - "{{ ansible_facts['distribution'] }}.yml"
+      - "{{ ansible_facts['os_family'] }}.yml"
+      - "default.yml"
+  tags: ["ct-nomad"]
+
 - name: "Add system account"
   ansible.builtin.user:
     comment: "Nomad system account"
@@ -8,7 +25,7 @@
     state: present
     system: true
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Create directories"
   ansible.builtin.file:
@@ -19,7 +36,7 @@
     state: directory
   loop: "{{ nomad_dirs }}"
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Download CNI archive (IECM)"
   ansible.builtin.get_url:
@@ -30,7 +47,7 @@
     validate_certs: false
   when: nomad_role == "client"
   ignore_errors: "{{ ansible_check_mode }}"
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Expand CNI archive (IECM)"
   ansible.builtin.unarchive:
@@ -40,7 +57,7 @@
   when: nomad_role == "client"
   ignore_errors: "{{ ansible_check_mode }}"
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Download Nomad archives"
   ansible.builtin.get_url:
@@ -51,7 +68,7 @@
     validate_certs: false
   loop: "{{ nomad_builds }}"
   when: item.state == "present"
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Create package directories (IECM)"
   ansible.builtin.file:
@@ -64,7 +81,7 @@
   when: item.state == "present"
   ignore_errors: "{{ ansible_check_mode }}"
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Expand archives (IECM)"
   ansible.builtin.unarchive:
@@ -75,7 +92,7 @@
   when: item.state == "present"
   ignore_errors: "{{ ansible_check_mode }}"
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Add symlink to active binary (IECM)"
   ansible.builtin.file:
@@ -84,7 +101,7 @@
     state: link
   ignore_errors: "{{ ansible_check_mode }}"
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Add bash include"
   ansible.builtin.template:
@@ -94,7 +111,7 @@
     owner: root
     src: nomad.sh.j2
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Script to validate Nomad job files"
   ansible.builtin.copy:
@@ -104,7 +121,7 @@
     owner: root
     src: nomad-validate-jobs.sh
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Render config file (NL)"
   ansible.builtin.template:
@@ -118,7 +135,7 @@
   notify: Handler_Restart_Nomad
   no_log: true
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Remove config file as no servers"
   ansible.builtin.file:
@@ -126,7 +143,7 @@
     state: absent
   when: (nomad_servers | length) == 0
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Systemd unit file"
   ansible.builtin.template:
@@ -138,7 +155,7 @@
   when: (nomad_servers | length) > 0
   register: reg_service
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Systemd unit file"
   ansible.builtin.file:
@@ -146,7 +163,7 @@
     state: absent
   when: (nomad_servers | length) == 0
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 - name: "Set service state"
   ansible.builtin.systemd:
@@ -156,7 +173,7 @@
     state: "{{ nomad_svc_state }}"
   when: (nomad_servers | length) > 0
   become: true
-  tags: [ct-nomad]
+  tags: ["ct-nomad"]
 
 # --------------------------------
 ...
